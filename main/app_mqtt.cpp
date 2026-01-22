@@ -21,6 +21,12 @@ AppMQTT::AppMQTT(const char* broker_uri)
 {
 }
 
+
+// static AppMQTT& instance() {
+//         static AppMQTT inst;   // static lifetime, inside class
+//         return inst;
+//     }
+
 AppMQTT::~AppMQTT()
 {
 }
