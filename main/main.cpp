@@ -124,7 +124,18 @@ void mqtt_pic_request(void *pvParameter){
 
     while (true) {
         if (xQueueReceive(my_queue, &msg, portMAX_DELAY) == pdTRUE) {
+
             ESP_LOGI(TAG_SUB, "Message received on topic: %s", msg.topic);
+
+            for (int i=0; i<5; i++){
+
+                camera_fb_t* temp = esp_camera_fb_get();
+
+                ESP_LOGI(TAG_SUB, "Capturing warm-up frame %d, with size %u bytes", i+1, temp->len);
+                if (temp) esp_camera_fb_return(temp);
+                else ESP_LOGE(TAG_SUB, "Failed to get frame");
+                vTaskDelay(pdMS_TO_TICKS(50)); 
+            }
 
             camera_fb_t* fb = esp_camera_fb_get();
             if (!fb) {

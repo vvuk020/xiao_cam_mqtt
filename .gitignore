@@ -5,3 +5,4 @@ dependencies.lock
 managed_components/
 sdkconfig
 sdkconfig.old
+py_mqtt_test/response_image_timo.png

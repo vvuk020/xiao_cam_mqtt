@@ -22,7 +22,7 @@ extern "C"{
 
 /* ================= TASKS ================= */
 
-void mqtt_subscriber(void *pvParameter)
+void mqtt_heartbeat(void *pvParameter)
 {
     const char* TAG_SUB = "MQTT_SUB_HEARTBEAT";
     const char* req_topic = "esp32/heartbeat/request";
@@ -62,7 +62,6 @@ void mqtt_pic_request(void *pvParameter){
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 
-    // mqtt_t->subscribe(req_topic, 0);
     QueueHandle_t my_queue = mqtt_t->subscribe(req_topic, 0);
     ESP_LOGI(TAG_SUB, "Queue created for topic %s: %p", req_topic, my_queue);
 
@@ -105,7 +104,7 @@ void app_main_simple_sub(void)
     mqtt.init();
 
     // Start tasks
-    xTaskCreate(mqtt_subscriber, "mqtt_subscriber", 8192, &mqtt, 5, NULL);
+    xTaskCreate(mqtt_heartbeat, "mqtt_heartbeat", 8192, &mqtt, 5, NULL);
     xTaskCreate(mqtt_pic_request, "mqtt_pic_request", 8192, &mqtt, 5, NULL);
 
 }
