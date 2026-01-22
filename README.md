@@ -3,13 +3,11 @@
 A FreeRTOS-based XIAO CAM (ESP32-S3) camera system that captures images and publishes them over MQTT, with support for request/response messaging and optional HTTP upload. Designed for remote monitoring, IoT projects, and lightweight surveillance.
 
 ## Features
-* Camera integration with `esp_camera`
 * Captures frames and queues them for processing
 * Publishes images via MQTT to a broker
 * Subscribes to request topics for heartbeat and picture retrieval
 * Optional HTTP upload support
 * FreeRTOS task-based architecture for concurrent operations
-* Logging with `ESP_LOG` for debugging
 
 ## Installation
 
