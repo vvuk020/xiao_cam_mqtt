@@ -25,6 +25,13 @@ WebCam::WebCam(const char *wifi_ssid, const char *wifi_pass, const char *server_
     this->rgb888_image_data = NULL;
 }
 
+WebCam::WebCam(const char *wifi_ssid, const char *wifi_pass)
+    : wifi_ssid(wifi_ssid), wifi_pass(wifi_pass){
+    
+    this->init_wifi();
+    this->rgb888_image_data = NULL;
+}
+
 WebCam::WebCam(){
     
     this->rgb888_image_data = NULL;

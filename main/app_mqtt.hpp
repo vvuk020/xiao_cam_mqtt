@@ -18,6 +18,8 @@ public:
     // const char *TAG = "APP_MQTT";
     static const char* TAG;
     QueueHandle_t mqtt_rx_queue;
+
+    static bool enable_debug_logs;
     
     static AppMQTT& instance(); // Singleton accessor
 
@@ -28,11 +30,11 @@ public:
     static std::vector<subscriber_queue_t> subscriber_queues;
     
     struct mqtt_message_t {
-    char topic[MQTT_MAX_TOPIC_LEN];
-    size_t topic_len;
+        char topic[MQTT_MAX_TOPIC_LEN];
+        size_t topic_len;
 
-    uint8_t payload[MQTT_MAX_PAYLOAD_LEN];
-    size_t payload_len;
+        uint8_t payload[MQTT_MAX_PAYLOAD_LEN];
+        size_t payload_len;
     };
 
 
@@ -45,8 +47,10 @@ public:
     bool is_connected();
     void publish(const char* topic, const uint8_t* data, size_t len, int qos = 0, int retain = 0);
     // void subscribe(const char* topic, int qos);
-    QueueHandle_t subscribe(const char* topic, int qos, size_t queue_len = 10);
-private:
+    QueueHandle_t subscribe(const char* topic, int qos, size_t queue_len = 2);
+
+    private:
+    
     static void mqtt_event_handler(void *handler_args,
                                    esp_event_base_t base,
                                    int32_t event_id,

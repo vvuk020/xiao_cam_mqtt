@@ -9,6 +9,7 @@ atomic_bool AppMQTT::mqtt_connected = false;
 esp_mqtt_client_handle_t AppMQTT::mqtt_client = NULL;
 const char* AppMQTT::TAG = "APP_MQTT";
 std::vector<AppMQTT::subscriber_queue_t> AppMQTT::subscriber_queues;
+bool AppMQTT::enable_debug_logs = false;
 
 
 AppMQTT::AppMQTT()
@@ -122,50 +123,32 @@ void AppMQTT::mqtt_event_handler(void *handler_args,
             msg.topic_len = event->topic_len;
             msg.payload_len = event->data_len;
 
-            // if (msg.topic_len >= MQTT_MAX_TOPIC_LEN ||
-            //     msg.payload_len >= MQTT_MAX_PAYLOAD_LEN) {
-            //     ESP_LOGW(TAG, "MQTT message too large, dropped");
-            //     break;
-            // }
 
             memcpy(msg.topic, event->topic, msg.topic_len);
             msg.topic[msg.topic_len] = '\0';
-
             memcpy(msg.payload, event->data, msg.payload_len);
 
-            // if (xQueueSend(self->mqtt_rx_queue, &msg, 0) != pdTRUE) {
-            //     ESP_LOGW(TAG, "MQTT RX queue full, dropped message");
-            // }
+            if (self->enable_debug_logs){
+                ESP_LOGI(TAG, "Receiving data on topic: %.*s", msg.topic_len, msg.topic);
+                ESP_LOGI(TAG, "Number of subscriber queues: %zu", self->subscriber_queues.size());
+            }
 
-
-
-            // ESP_LOGI(TAG, "Receving data");
-            // for (auto& sub : self->subscriber_queues) {
-            //     if (strcmp(sub.topic, event->topic) == 0) {
-            //         xQueueSend(sub.queue, &msg, 0);  // non-blocking
-            //     }
-            // }
-
-
-            ESP_LOGI(TAG, "Receiving data on topic: %.*s", msg.topic_len, msg.topic);
-            ESP_LOGI(TAG, "Number of subscriber queues: %zu", self->subscriber_queues.size());
-
-            bool matched = false;
             for (auto& sub : self->subscriber_queues) {
-                ESP_LOGI(TAG, "Checking subscriber: %s, queue handle: %p", sub.topic, sub.queue);
-                ESP_LOGI(TAG, "Event topic: %s:", msg.topic);
+                if (self->enable_debug_logs){
+                    ESP_LOGI(TAG, "Checking subscriber: %s, queue handle: %p", sub.topic, sub.queue);
+                    ESP_LOGI(TAG, "Event topic: %s:", msg.topic);
 
-                ESP_LOGI(TAG, "Current queue length: %u / available slots: %u",
-                        uxQueueMessagesWaiting(sub.queue),
-                        uxQueueSpacesAvailable(sub.queue));
+                    ESP_LOGI(TAG, "Current queue length: %u / available slots: %u",
+                            uxQueueMessagesWaiting(sub.queue),
+                            uxQueueSpacesAvailable(sub.queue));
+                }
 
                 if (strcmp(sub.topic, msg.topic) == 0) {
                     if (xQueueSend(sub.queue, &msg, 0) == pdTRUE) {
-                        ESP_LOGI(TAG, "Message queued for topic: %s", sub.topic);
+                        if (self->enable_debug_logs) ESP_LOGI(TAG, "Message queued for topic: %s", sub.topic);
                     } else {
                         ESP_LOGW(TAG, "Queue full, message dropped for topic: %s", sub.topic);
                     }
-                    matched = true;
                 }
             }
 

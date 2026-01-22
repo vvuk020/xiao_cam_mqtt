@@ -36,6 +36,7 @@ public:
     uint8_t *rgb888_image_data;
 
     WebCam(const char *wifi_ssid, const char *wifi_pass, const char *server_url);
+    WebCam(const char *wifi_ssid, const char *wifi_pass);
     WebCam();
     ~WebCam();
 
