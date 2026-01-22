@@ -184,8 +184,8 @@ void app_main(void)
     frame_queue_http = xQueueCreate(FRAME_QUEUE_SIZE, sizeof(camera_fb_t*));
 
     // Create mqtt object
-    static AppMQTT mqtt;  // Must be static!!!
-    // AppMQTT& mqtt = AppMQTT::instance();
+    // static AppMQTT mqtt;  // Must be static!!!
+    AppMQTT& mqtt = AppMQTT::instance();
     mqtt.set_broker_uri(MQTT_BROKER_URI);
     mqtt.init();   // <-- THIS CREATES mqtt_rx_queue
 

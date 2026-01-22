@@ -18,6 +18,8 @@ public:
     // const char *TAG = "APP_MQTT";
     static const char* TAG;
     QueueHandle_t mqtt_rx_queue;
+    
+    static AppMQTT& instance(); // Singleton accessor
 
     struct subscriber_queue_t {
         QueueHandle_t queue;
