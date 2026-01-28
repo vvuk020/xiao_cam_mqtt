@@ -43,9 +43,9 @@ void mqtt_heartbeat(void *pvParameter)
         if (xQueueReceive(my_queue, &msg, portMAX_DELAY) == pdTRUE) {
             mqtt_t->publish(resp_topic, (const uint8_t*)"ack", 3);
         }
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
-
 
 void mqtt_pic_request(void *pvParameter){
 
@@ -55,8 +55,6 @@ void mqtt_pic_request(void *pvParameter){
     
     AppMQTT* mqtt_t = (AppMQTT*) pvParameter;
     AppMQTT::mqtt_message_t msg;
-
-
     while (!mqtt_t->is_connected()) {
         ESP_LOGI(TAG_SUB, "Connecting...");
         vTaskDelay(pdMS_TO_TICKS(500));
@@ -75,15 +73,15 @@ void mqtt_pic_request(void *pvParameter){
                 vTaskDelay(pdMS_TO_TICKS(50));
                 continue;
             }
-
             ESP_LOGI(TAG_SUB, "Got picture! Size: %u bytes", fb->len);
 
             mqtt_t->publish(resp_topic, fb->buf, fb->len);
 
             esp_camera_fb_return(fb);
+            vTaskDelay(pdMS_TO_TICKS(100));
+        
         }
     }
-
 }
 
 /* ================= TASKS ================= */
@@ -106,6 +104,5 @@ void app_main_simple_sub(void)
     // Start tasks
     xTaskCreate(mqtt_heartbeat, "mqtt_heartbeat", 8192, &mqtt, 5, NULL);
     xTaskCreate(mqtt_pic_request, "mqtt_pic_request", 8192, &mqtt, 5, NULL);
-
 }
 }
