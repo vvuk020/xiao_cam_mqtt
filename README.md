@@ -17,6 +17,40 @@ The design is inspired by projects like [`xiao_cam_mqtt`](https://github.com/vvu
 
 ---
 
+## Installation
+
+1. Clone this repository:
+
+```bash
+git clone https://github.com/vvuk020/xiao_cam_mqtt.git
+cd xiao_cam_mqtt
+```
+
+2. Open the project in **ESP-IDF** (v5.x recommended)
+
+3. Configure your Wi-Fi and MQTT settings in `main.cpp`:
+
+```cpp
+#define WIFI_SSID         "your_ssid"
+#define WIFI_PASS         "your_password"
+#define MQTT_BROKER_URI   "your_broker_uri"
+#define CLIENT_ID         "your_client_id"
+#define pic_req_topic     "your_picture_request_topic"
+#define pic_resp_topic    "your_picture_response_topic"
+#define hbeat_req_topic   "your_heartbeat_request_topic"
+#define hbeat_resp_topic  "your_picture_response_topic"
+```
+
+4. Build & Flash
+
+```bash
+idf.py set-target esp32s3
+idf.py build
+idf.py flash monitor
+```
+
+---
+
 ## Project Structure
 
 ```
@@ -73,7 +107,7 @@ Camera initialization happens automatically when the `CustCam` object is constru
 
 ---
 
-## 📡 MQTT Topics
+## MQTT Topics
 
 | Purpose            | Topic                      | Direction |
 | ------------------ | -------------------------- | --------- |
@@ -113,16 +147,6 @@ Wi‑Fi credentials are defined in `main.cpp`:
 ```
 
 Wi‑Fi is initialized via the `WifiCust` class and blocks until a connection is established.
-
----
-
-## Build & Flash
-
-```bash
-idf.py set-target esp32s3
-idf.py build
-idf.py flash monitor
-```
 
 ---
 
