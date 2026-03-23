@@ -108,7 +108,6 @@ void mqtt_pic_request(void *pvParameter){
     const char* TAG_SUB = "MQTT_SUB_PICTURE";
     const char* req_topic = "esp32/picture/request";
     const char* resp_topic = "esp32/picture/response";
-    
     AppMQTT* mqtt_t = (AppMQTT*) pvParameter;  // AppMQTT* mqtt_t = static_cast<AppMQTT*>(pvParameter);
     AppMQTT::mqtt_message_t msg;
 
@@ -151,6 +150,7 @@ void mqtt_pic_request(void *pvParameter){
             esp_camera_fb_return(fb);
             vTaskDelay(pdMS_TO_TICKS(100));
         }
+
     }
 
 }
