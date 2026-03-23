@@ -11,15 +11,15 @@
 
 
 
-#define WIFI_SSID           "das_labor"
+#define WIFI_SSID           "CAISA_LABOR_2G"
 #define WIFI_PASS           "rosrosros"
 #define SERVER_URL          "http://192.168.1.100:5000/upload" //"http://127.0.0.1:5000/upload"  // "http://192.168.1.177:5000/upload"
-#define MQTT_BROKER_URI     "mqtt://192.168.1.100:1883"        // <-- PC IP
-#define CLIENT_ID           "mqtt://192.168.1.100:1883"        // <-- PC IP
-#define pic_req_topic       "esp32/picture/request"
-#define pic_resp_topic      "esp32/picture/response"
-#define hbeat_req_topic     "esp32/heartbeat/request"
-#define hbeat_resp_topic    "esp32/heartbeat/response"
+#define MQTT_BROKER_URI     "mqtt://192.168.1.163:1883"        // <-- PC IP
+#define CLIENT_ID           "ESP32_CAM_2"                      // <-- PC IP
+#define pic_req_topic       "ESP32_CAM_2/picture/request"
+#define pic_resp_topic      "ESP32_CAM_2/picture/response"
+#define hbeat_req_topic     "ESP32_CAM_2/heartbeat/request"
+#define hbeat_resp_topic    "ESP32_CAM_2/heartbeat/response"
   
 
 extern "C"{
@@ -64,6 +64,15 @@ void cam_task(void* pvParameter){
         auto msg = mqtt_device.get_msg(cam_q);
         if (msg.payload_len > 0){
             ESP_LOGI(TAG_SUB, "Message received on topic: %s", msg.topic);
+
+            for (int i=0; i<2; i++){
+                camera_fb_t* temp = esp_camera_fb_get();
+
+                ESP_LOGI(TAG_SUB, "Capturing warm-up frame %d, with size %u bytes", i+1, temp->len);
+                if (temp) esp_camera_fb_return(temp);
+                else ESP_LOGE(TAG_SUB, "Failed to get frame");
+                vTaskDelay(pdMS_TO_TICKS(20)); 
+            }
             
             camera_fb_t* fb = esp_camera_fb_get();
             ESP_LOGI(TAG_SUB, "Got picture! Size: %u bytes", fb->len);
@@ -112,5 +121,23 @@ void app_main(void)
     xTaskCreate(cam_task, "cam_task", 8192, NULL, 24, NULL);
 
 
+
+    //     while (1) {
+            
+    //     camera_fb_t* fb = esp_camera_fb_get();
+    //     ESP_LOGI(TAG, "Got picture! Size: %u bytes", fb->len);
+
+    //     if (!fb) {
+    //         ESP_LOGE(TAG, "Failed to get frame");
+    //         vTaskDelay(pdMS_TO_TICKS(50));
+    //         continue;
+    //     }
+    //         esp_camera_fb_return(fb);
+
+    //     }
+       
+
+    //     vTaskDelay(pdMS_TO_TICKS(100));
 }
+
 }

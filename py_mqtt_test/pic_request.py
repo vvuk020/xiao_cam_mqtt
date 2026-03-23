@@ -4,10 +4,10 @@ import time
 import paho.mqtt.client as mqtt
 from PIL import Image
 
-BROKER = "192.168.1.100"
+BROKER = "192.168.1.163"
 PORT = 1883
-REQ_TOPIC = "esp32/picture/request"
-RESP_TOPIC = "esp32/picture/response"
+REQ_TOPIC = "ESP32_CAM_2/picture/request"
+RESP_TOPIC = "ESP32_CAM_2/picture/response"
 
 image_data = None
 

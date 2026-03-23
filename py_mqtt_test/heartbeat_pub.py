@@ -2,16 +2,18 @@ import time
 import random
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.1.100"
+BROKER = "192.168.1.163"
 PORT = 1883
-REQUEST_TOPIC = "esp32/heartbeat/request"
-RESPONSE_TOPIC = "esp32/heartbeat/response"
+REQUEST_TOPIC = "ESP32_CAM_2/heartbeat/request"
+RESPONSE_TOPIC = "ESP32_CAM_2/heartbeat/response"
 
 # Global to hold reply
 reply_received = None
 
+
 def on_message(client, userdata, msg):
     global reply_received
+
     if msg.topic == RESPONSE_TOPIC:
         reply_received = msg.payload.decode()
 
@@ -40,7 +42,10 @@ try:
         else:
             print("No reply received.")
 
-        time.sleep(5)
+
+
+
+        time.sleep(2)
 
 except KeyboardInterrupt:
     print("\nStopping...")

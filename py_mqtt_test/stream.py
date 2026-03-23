@@ -3,10 +3,10 @@ import numpy as np
 import paho.mqtt.client as mqtt
 import time
 
-BROKER = "192.168.1.100"
+BROKER = "192.168.1.163"
 PORT = 1883
-REQ_TOPIC = "esp32/picture/request"
-RESP_TOPIC = "esp32/picture/response"
+REQ_TOPIC = "ESP32_CAM_2/picture/request"
+RESP_TOPIC = "ESP32_CAM_2/picture/response"
 
 exit_flag = 0
 request_time = None
@@ -25,6 +25,7 @@ def on_message(client, userdata, msg):
         img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
         
         if img is not None:
+            # img = cv2.resize(img, (800, 800))
             cv2.imshow("ESP32 Camera", img)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
